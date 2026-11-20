@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Piper — птенец и волны</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Onest:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* VOICE: смелый, солнечный, морской — как самые яркие кадры мультика
+   IDEA: глубокая вода как основа, солнце и коралловый рак как вспышки цвета; каждая вкладка — один яркий «момент» у моря
+   PICTURE: гигантское слово PIPER, внутри букв бегает Пайпер (гифка); шкала прилива; ракушки-факты; бутылки с записками; игра
+   COLOUR and TYPE: глубина #0a2a35, бирюза прибоя #1fb5c1, пена #effcff, солнце #ffc857, коралл #ff6b4a; Dela Gothic One для заголовков, Onest для текста
+   LAYOUT: сплошная цветная панель меню слева, контент справа; на телефоне меню внизу */
+:root{color-scheme:dark;--deep:#1f7690;--deep2:#175f75;--deep3:#1b6a82;--surf:#1fb5c1;--foam:#effcff;--sun:#ffc857;--coral:#ff6b4a;--ink:#effcff;--soft:#a9cfd6;--dark:#10242c}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;color:var(--ink);font:17px/1.65 Onest,system-ui,sans-serif;background:radial-gradient(900px 600px at 85% -10%,rgba(255,214,120,.45),transparent 60%),radial-gradient(900px 700px at 10% 110%,rgba(80,215,225,.45),transparent 60%),linear-gradient(180deg,#2c93ab,#1f7690 55%,#1a6a82);background-attachment:fixed;min-height:100vh;overflow-x:clip}
+h1,h2,h3{font-family:"Dela Gothic One",Onest,system-ui,sans-serif;font-weight:400;line-height:1.05;margin:0 0 .5em;text-wrap:balance}
+h2{font-size:clamp(32px,4.4vw,54px)}h3{font-size:21px}
+p{margin:0 0 1em;max-width:64ch}
+img{max-width:100%;display:block}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--sun);outline-offset:3px}
+.kick{display:inline-block;font:700 13px Onest;color:var(--dark);background:var(--sun);padding:4px 12px;border-radius:999px;margin-bottom:14px}
+.vivid{filter:saturate(1.2) contrast(1.06)}
+
+/* меню */
+.side{position:fixed;left:0;top:0;bottom:0;width:240px;padding:28px 18px;display:flex;flex-direction:column;gap:26px;z-index:20;background:linear-gradient(180deg,#22c4cf,#14a0ad 70%,#0f8592);box-shadow:8px 0 40px rgba(0,0,0,.3)}
+.logo{font:400 44px/1 "Dela Gothic One";color:#fff;text-decoration:none;text-shadow:0 4px 0 #0d6f7c}
+.logo small{display:block;font:600 13px Onest;color:#d9fbff;margin-top:8px;text-shadow:none}
+.menu{display:flex;flex-direction:column;gap:6px}
+.menu a{display:flex;align-items:center;gap:10px;min-height:46px;padding:8px 14px;border-radius:16px;color:#fff;text-decoration:none;font-weight:700;font-size:16px;transition:background .25s,transform .25s}
+.menu a::before{content:"";width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.45);flex:none;transition:.25s}
+.menu a:hover{background:rgba(255,255,255,.16);transform:translateX(4px)}
+.menu a.on{background:#0f4c5f;box-shadow:0 8px 20px rgba(0,0,0,.25)}
+.menu a.on::before{background:var(--coral);box-shadow:0 0 0 4px rgba(255,107,74,.3)}
+.buddy{margin-top:auto;display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600;color:#e6fdff}
+.buddy img{width:58px;height:58px;border-radius:50%;border:3px solid #fff;animation:bob 2.6s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-6px) rotate(-5deg)}}
+
+main{margin-left:240px;padding:40px clamp(18px,4vw,60px) 140px}
+.tab{display:none;max-width:1480px;margin:0 auto}.tab.on{display:block;animation:fade .6s ease}
+@keyframes fade{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.card{background:rgba(16,78,98,.88);border:1px solid rgba(255,255,255,.14);border-radius:28px;padding:clamp(20px,3vw,32px);box-shadow:0 20px 50px rgba(0,0,0,.25)}
+.card.sun{background:var(--sun);color:var(--dark);border:0}
+.card.paper{background:#fff6e4;color:var(--dark);border:0}
+.pill{display:inline-flex;align-items:center;gap:8px;min-height:50px;padding:12px 24px;border-radius:999px;border:0;background:var(--coral);color:#fff;font:700 16px Onest;text-decoration:none;box-shadow:0 6px 0 #c84a2e;transition:transform .15s,box-shadow .15s}
+.pill:hover{transform:translateY(-2px);box-shadow:0 8px 0 #c84a2e}.pill:active{transform:translateY(3px);box-shadow:0 2px 0 #c84a2e}
+.pill.light{background:var(--foam);color:var(--dark);box-shadow:0 6px 0 #9fc6cc}
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.capsule{border-radius:30px;overflow:hidden;box-shadow:0 26px 60px rgba(0,0,0,.4);border:4px solid rgba(255,255,255,.9)}
+.capsule img{width:100%;height:100%;object-fit:cover}
+
+.wipe{position:fixed;inset:0;z-index:60;pointer-events:none;transform:translateY(105%)}
+.wipe svg{position:absolute;left:0;top:-58px;width:100%;height:60px}
+.wipe div{position:absolute;inset:0;background:linear-gradient(var(--surf),#0d6f7c)}
+.wipe.go{animation:wipe .9s cubic-bezier(.6,0,.4,1)}
+@keyframes wipe{0%{transform:translateY(105%)}45%,55%{transform:translateY(0)}100%{transform:translateY(-110%)}}
+
+.surf{position:fixed;left:240px;right:0;bottom:0;height:74px;pointer-events:none;z-index:10;overflow:hidden}
+.surf svg{position:absolute;bottom:0;width:200%;height:100%;animation:drift 14s linear infinite}
+.surf svg+svg{animation-duration:9s;animation-direction:reverse}
+@keyframes drift{to{transform:translateX(-50%)}}
+
+/* главная */
+.hero{position:relative;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:clamp(20px,4vw,50px);align-items:center;min-height:calc(100vh - 200px)}
+.hero-left{container-type:inline-size}
+.big-title{white-space:nowrap;font:400 min(20cqw,230px)/.9 "Dela Gothic One";margin:0 0 18px;color:var(--sun);background:url(gif/run.gif) center 40%/cover;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 6px 0 rgba(0,0,0,.25))}
+.hero .lead{font-size:21px;line-height:1.5;color:#fff}
+.hero .lead b{color:var(--sun)}
+.facts{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 28px}
+.facts span{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:6px 14px;font-weight:600;font-size:15px;white-space:nowrap}
+.facts span:first-child{background:var(--coral);border-color:var(--coral)}
+.beach{position:relative;aspect-ratio:4/3.4;cursor:crosshair;transform:rotate(2deg)}
+.beach img{object-position:45% 50%}
+.beach::after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 55%,rgba(10,42,53,.55));pointer-events:none}
+.sunball{position:absolute;right:-30px;top:-40px;width:150px;height:150px;border-radius:50%;background:radial-gradient(#fff3c4,var(--sun) 55%,rgba(255,200,87,0) 72%);animation:pulse 4s ease-in-out infinite;z-index:-1}
+@keyframes pulse{50%{transform:scale(1.15)}}
+.beach .tracks{position:absolute;inset:0;pointer-events:none;z-index:2}
+.track{position:absolute;width:24px;height:24px;animation:sink 3s forwards}
+@keyframes sink{to{opacity:0;transform:scale(.7)}}
+.hint{position:absolute;left:16px;bottom:16px;z-index:3;background:var(--sun);color:var(--dark);border-radius:999px;padding:6px 14px;font-size:14px;font-weight:700;transition:opacity .4s}
+.mini{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:16px;margin-top:34px}
+.mini a{position:relative;display:block;text-decoration:none;color:#fff;border-radius:24px;overflow:hidden;min-height:200px;transition:transform .3s;box-shadow:0 16px 36px rgba(0,0,0,.35)}
+.mini a:hover{transform:translateY(-6px) rotate(-1deg)}
+.mini img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(1.2)}
+.mini a::after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 30%,rgba(12,64,80,.92))}
+.mini div{position:absolute;left:0;right:0;bottom:0;padding:16px 18px;z-index:1}
+.mini h3{margin:0 0 4px;color:var(--sun)}
+.mini a:nth-child(2) h3{color:var(--coral)}.mini a:nth-child(3) h3{color:var(--surf)}
+
+/* сюжет */
+.tide{display:grid;grid-template-columns:110px minmax(0,1fr);gap:clamp(16px,3vw,36px);align-items:start}
+.gauge{position:relative;height:540px;border-radius:60px;background:linear-gradient(#ffe2a0,var(--sun) 40%,#e8a640);overflow:hidden;box-shadow:inset 0 4px 14px rgba(0,0,0,.25),0 18px 40px rgba(0,0,0,.35);touch-action:none;cursor:ns-resize;border:4px solid #fff}
+.water{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(#3fd3dc,var(--surf) 30%,#0d6f7c);transition:height .45s cubic-bezier(.3,.8,.3,1)}
+.water::before{content:"";position:absolute;left:-20%;right:-20%;top:-10px;height:20px;background:radial-gradient(circle at 10px 10px,#fff 9px,transparent 10px) 0 0/22px 20px repeat-x;animation:foamx 3s linear infinite}
+@keyframes foamx{to{transform:translateX(22px)}}
+.marks{position:absolute;inset:0;display:flex;flex-direction:column-reverse;justify-content:space-around;align-items:center;padding:16px 0}
+.marks button{width:42px;height:42px;border-radius:50%;border:3px solid #fff;background:rgba(10,42,53,.35);color:#fff;font:700 15px Onest;z-index:2;transition:.2s}
+.marks button.on{background:var(--coral);transform:scale(1.2);box-shadow:0 0 0 6px rgba(255,107,74,.35)}
+.scene{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:20px;align-items:center}
+.scene .capsule{aspect-ratio:16/10;position:relative;background:#0f3a48}
+.scene .capsule img{transition:opacity .35s;filter:saturate(1.2) contrast(1.05)}
+.gifbtn{position:absolute;right:14px;bottom:14px}
+.ch-num{font:400 64px/1 "Dela Gothic One";color:var(--coral);margin-bottom:10px}
+
+/* ракушки */
+.shells{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:18px;margin:24px 0 34px}
+.shell{position:relative;min-height:230px;border:0;padding:0;background:none;text-align:left;perspective:800px}
+.shell .top,.shell .in{position:absolute;inset:0;border-radius:120px 120px 28px 28px;padding:28px 22px 22px;transition:transform .6s;backface-visibility:hidden}
+.shell .top{background:repeating-conic-gradient(from 180deg at 50% 100%,var(--coral) 0 7deg,#ff8f6e 7deg 14deg);display:flex;flex-direction:column;align-items:center;justify-content:flex-end;text-align:center;box-shadow:0 14px 30px rgba(0,0,0,.35)}
+.shell:nth-child(2n) .top{background:repeating-conic-gradient(from 180deg at 50% 100%,var(--sun) 0 7deg,#ffd98a 7deg 14deg)}
+.shell:nth-child(3n) .top{background:repeating-conic-gradient(from 180deg at 50% 100%,var(--surf) 0 7deg,#53cfd8 7deg 14deg)}
+.shell .top b{font:400 40px/1 "Dela Gothic One";color:var(--dark);background:#fff;padding:10px 16px;border-radius:18px}
+.shell .top span{margin-top:8px;font-weight:800;background:var(--dark);color:#fff;padding:3px 12px;border-radius:10px}
+.shell .in{background:var(--foam);color:var(--dark);transform:rotateX(180deg);display:flex;flex-direction:column;justify-content:center;font-size:15px;line-height:1.5;font-weight:500}
+.shell.open .top{transform:rotateX(-180deg)}.shell.open .in{transform:none}
+.pearl{width:18px;height:18px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,#e2dcf2 60%,#b9aed6);margin-bottom:8px;flex:none}
+.two{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:20px;align-items:start}
+.tl{list-style:none;padding:0;margin:0}
+.tl li{position:relative;padding:0 0 18px 28px;border-left:3px solid rgba(31,181,193,.5);margin-left:8px}
+.tl li::before{content:"";position:absolute;left:-10px;top:3px;width:17px;height:17px;border-radius:50%;background:var(--sun);box-shadow:0 0 0 4px var(--deep2)}
+.tl b{display:block;font:400 16px "Dela Gothic One";color:var(--sun);margin-bottom:2px}
+dl{display:grid;grid-template-columns:auto 1fr;gap:10px 16px;margin:0}dt{opacity:.75}dd{margin:0;font-weight:800}
+
+/* герои */
+.heroes{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:20px}
+.hc{background:rgba(16,78,98,.92);border-radius:28px;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.08)}
+.hc img{aspect-ratio:16/10;object-fit:cover;width:100%;transition:filter .4s;filter:saturate(1.2)}
+.hc.real{background:var(--sun);color:var(--dark)}
+.hc.real img{filter:grayscale(.6) sepia(.3)}
+.hc .b{padding:18px 20px 22px}
+.sw{display:flex;background:rgba(255,255,255,.12);border-radius:999px;padding:4px;margin-bottom:12px;width:max-content}
+.hc.real .sw{background:rgba(16,36,44,.12)}
+.sw button{border:0;background:none;padding:6px 14px;border-radius:999px;font-weight:700;font-size:14px;min-height:38px}
+.sw button.on{background:var(--coral);color:#fff}
+
+/* отзывы */
+.scores{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:14px;margin-bottom:26px}
+.sc{border-radius:24px;padding:18px 20px;color:var(--dark);font-weight:600}
+.sc:nth-child(1){background:var(--sun)}.sc:nth-child(2){background:var(--surf)}.sc:nth-child(3){background:var(--coral);color:#fff}.sc:nth-child(4){background:var(--foam)}
+.sc b{display:block;font:400 36px/1.1 "Dela Gothic One"}
+.shore{position:relative;display:flex;flex-wrap:wrap;justify-content:center;gap:28px 36px;padding:40px 20px 80px;border-radius:34px;background:linear-gradient(transparent 62%,rgba(31,181,193,.85) 62%,#0d6f7c),linear-gradient(#ffe2a0,var(--sun));overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.35)}
+.shore::after{content:"";position:absolute;left:-5%;right:-5%;top:calc(62% - 10px);height:20px;background:radial-gradient(circle at 12px 10px,#fff 10px,transparent 11px) 0 0/24px 20px repeat-x;animation:foamx 3s linear infinite}
+.bottle{width:66px;height:124px;border:0;padding:0;background:none;animation:float 3s ease-in-out infinite;position:relative;z-index:2}
+.bottle:nth-child(2n){animation-delay:-1.2s}.bottle:nth-child(3n){animation-delay:-2s}
+.bottle svg{width:100%;height:100%;filter:drop-shadow(0 10px 8px rgba(0,0,0,.25))}
+.bottle.read{opacity:.5}
+.bottle span{position:absolute;bottom:-26px;left:50%;transform:translateX(-50%);font-size:13px;font-weight:800;color:#fff;white-space:nowrap}
+@keyframes float{50%{transform:translateY(-10px) rotate(7deg)}}
+.note{margin-top:24px;background:#fff6e4 repeating-linear-gradient(transparent 0 33px,#ecdcbc 33px 34px);color:var(--dark);border-radius:10px;padding:28px 30px;box-shadow:0 18px 40px rgba(0,0,0,.35);transform-origin:top;animation:unroll .6s ease;border-left:8px solid var(--coral)}
+@keyframes unroll{from{transform:scaleY(.1);opacity:0}to{transform:none;opacity:1}}
+.note q{display:block;font:400 clamp(20px,2.2vw,26px)/1.35 "Dela Gothic One";margin-bottom:12px;quotes:"«" "»"}
+.note .by{font-weight:800;color:#c84a2e}
+
+/* мнение */
+.op{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:22px;align-items:start}
+.op p{font-size:18px}
+.op .paper h2{color:#0d6f7c}
+.op mark{background:linear-gradient(transparent 55%,rgba(255,200,87,.8) 55%);color:inherit;padding:0 2px}
+.rate{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.1);font-weight:600}
+.rate .sh{display:flex;gap:3px;flex:none}
+.rate .sh i{width:18px;height:16px;border-radius:10px 10px 3px 3px;background:rgba(255,255,255,.14);transition:background .3s}
+.rate .sh i.f{background:var(--coral)}
+.rate:nth-child(2n) .sh i.f{background:var(--sun)}
+.big{font:400 clamp(70px,9vw,104px)/1 "Dela Gothic One";color:var(--sun)}
+
+
+/* живой фон */
+.bd{position:fixed;inset:-60px;z-index:-3;background-size:cover;background-position:center;filter:blur(38px) saturate(1.35);opacity:0;transition:opacity 1.2s}
+.bd.on{opacity:.6}
+.tint{position:fixed;inset:0;z-index:-2;background:radial-gradient(1000px 700px at 80% 0%,rgba(255,214,120,.3),transparent 60%),linear-gradient(180deg,rgba(31,118,144,.25),rgba(26,106,130,.6) 75%)}
+.rays{position:fixed;left:240px;right:0;top:-10vh;height:90vh;z-index:-2;pointer-events:none;background:repeating-conic-gradient(from 160deg at 75% -10%,rgba(255,255,255,.11) 0 3deg,transparent 3deg 11deg);-webkit-mask:linear-gradient(#000,transparent);mask:linear-gradient(#000,transparent);animation:sway 12s ease-in-out infinite alternate;transform-origin:75% 0}
+@keyframes sway{to{transform:rotate(4deg)}}
+.bubbles{position:fixed;left:240px;right:0;top:0;bottom:0;z-index:-1;pointer-events:none;overflow:hidden}
+.bubbles i{position:absolute;bottom:-40px;border-radius:50%;border:2px solid rgba(239,252,255,.35);background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.35),rgba(255,255,255,.04) 60%);animation:riseb linear infinite}
+@keyframes riseb{0%{transform:translate(0,0)}50%{transform:translate(18px,-55vh)}100%{transform:translate(-10px,-115vh);opacity:.2}}
+/* украшения главной */
+.float-gif{position:absolute;left:-46px;top:-40px;width:clamp(150px,13vw,240px);border:5px solid #fff;border-radius:18px;transform:rotate(-7deg);box-shadow:0 18px 40px rgba(0,0,0,.45);z-index:4;animation:bob 4s ease-in-out infinite}
+.float-gif img{border-radius:12px;width:100%}
+.oscar{position:absolute;right:-26px;bottom:-30px;width:clamp(110px,8vw,140px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff2c2,var(--sun) 60%,#e3a43a);color:var(--dark);display:grid;place-items:center;text-align:center;font:400 15px/1.15 "Dela Gothic One";box-shadow:0 10px 0 #c88a2c,0 20px 40px rgba(0,0,0,.4);transform:rotate(10deg);z-index:4;animation:wob 5s ease-in-out infinite}
+.oscar b{display:block;font-size:30px}
+@keyframes wob{50%{transform:rotate(-4deg) scale(1.05)}}
+@media(min-width:1500px){body{font-size:18px}.hero .lead{font-size:24px}.mini a{min-height:260px}.facts span{font-size:16px}}
+@media(max-width:760px){.rays,.bubbles{left:0}.float-gif{left:-8px;top:-24px;width:120px}.oscar{right:-6px;bottom:-20px;width:96px;font-size:12px}.oscar b{font-size:22px}}
+
+@media(max-width:1000px){.scene{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:900px){.hero,.two,.op{grid-template-columns:minmax(0,1fr)}.hero{min-height:0}.beach{transform:none}}
+@media(max-width:760px){
+ .side{top:auto;width:auto;right:0;padding:8px 8px calc(8px + env(safe-area-inset-bottom));flex-direction:row;gap:0}
+ .logo,.buddy{display:none}
+ .menu{flex-direction:row;overflow-x:auto;gap:4px;scrollbar-width:none}.menu a{flex:none;font-size:14px;min-height:44px}.menu a::before{display:none}
+ main{margin:0;padding:22px 16px 150px}
+ .surf{left:0;bottom:62px;height:46px}
+ .tide{grid-template-columns:64px minmax(0,1fr)}.gauge{height:460px}.marks button{width:36px;height:36px}
+ .big-title{font-size:clamp(84px,27vw,140px)}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="bd" id="bdA"></div><div class="bd" id="bdB"></div><div class="tint"></div><div class="rays"></div><div class="bubbles" id="bubbles"></div>
+<aside class="side">
+<a class="logo" href="#home">piper<small>короткий мультфильм Pixar</small></a>
+<nav class="menu" id="menu">
+<a href="#home">Главная</a><a href="#story">Сюжет</a><a href="#making">Как его сделали</a><a href="#heroes">Герои</a><a href="#reviews">Отзывы</a><a href="#opinion">Моё мнение</a>
+</nav>
+<div class="buddy"><img src="img/piper.png" alt="">Пайпер ждёт тебя на берегу</div>
+</aside>
+
+<main>
+<!-- ГЛАВНАЯ -->
+<section class="tab" id="t-home">
+<div class="hero">
+<div class="hero-left">
+<div class="kick">Pixar · 2016</div>
+<h1 class="big-title">PIPER</h1>
+<p class="lead">Маленький птенец песочника очень хочет есть. Но вся еда спрятана в песке у воды, а там… <b>огромные страшные волны.</b></p>
+<div class="facts"><span>6 минут</span><span>Без слов</span><span>Шёл перед «В поисках Дори»</span><span>«Оскар» 2017</span></div>
+<div class="row"><a class="pill" href="#story">Смотреть сюжет</a><a class="pill light" href="#heroes">Познакомиться с героями</a></div>
+</div>
+<div style="position:relative"><div class="sunball"></div><div class="float-gif"><img src="gif/crab.gif" alt="Пайпер встречает рака-отшельника"></div><div class="oscar"><span><b>«Оскар»</b>2017</span></div><div class="capsule beach" id="beach"><img src="f/238.jpg" alt="Пайпер стоит на мокром песке, а за ней поднимается огромная волна"><div class="tracks" id="tracks"></div><span class="hint" id="bhint">Проведи по картинке — оставишь следы</span></div></div>
+</div>
+<div class="mini">
+<a href="#story"><img src="t/127.jpg" alt=""><div><h3>Волна!</h3>Как Пайпер испугалась моря</div></a>
+<a href="#heroes"><img src="t/205.jpg" alt=""><div><h3>Новый друг</h3>Рак-отшельник, который всё изменил</div></a>
+<a href="#making"><img src="t/260.jpg" alt=""><div><h3>Под водой</h3>Как снимали самый красивый момент</div></a>
+<a href="#opinion"><img src="t/310.jpg" alt=""><div><h3>Моё мнение</h3>Почему этот мультик стоит посмотреть</div></a>
+</div>
+</section>
+
+<!-- СЮЖЕТ -->
+<section class="tab" id="t-story">
+<div class="kick">Сюжет</div>
+<h2>Шкала прилива</h2>
+<p>Двигай воду вверх и вниз или нажимай на кружки. Каждый уровень — новая глава мультика.</p>
+<div class="tide">
+<div class="gauge" id="gauge" role="slider" tabindex="0" aria-label="Глава сюжета" aria-valuemin="1" aria-valuemax="10"><div class="water" id="water"></div><div class="marks" id="marks"></div></div>
+<div class="scene">
+<div class="capsule"><img id="scImg" src="f/40.jpg" alt=""><button class="pill light gifbtn" id="gifBtn">▶ Оживить</button></div>
+<div class="card sun" id="scText" aria-live="polite"></div>
+</div>
+</div>
+</section>
+
+<!-- КАК СДЕЛАЛИ -->
+<section class="tab" id="t-making">
+<div class="kick">Краткая история</div>
+<h2>Как появился «Пайпер»</h2>
+<p>Нажимай на ракушки — внутри спрятаны жемчужины-факты.</p>
+<div class="shells" id="shells"></div>
+<div class="two">
+<div class="card">
+<h3>Путь мультика</h3>
+<ul class="tl">
+<li><b>Идея</b>Режиссёр Алан Барильяро бегал по пляжу в Северной Калифорнии и смотрел на песочников, которые носятся туда-сюда от волн.</li>
+<li><b>Три года работы</b>Команда ездила на пляжи изучать птиц. Песочники в мультике двигаются как настоящие, а не как люди в перьях.</li>
+<li><b>17 июня 2016</b>Премьера в кино: «Пайпер» показывали перед мультфильмом «В поисках Дори».</li>
+<li><b>4 февраля 2017</b>Премия «Энни» за лучший короткий мультфильм.</li>
+<li><b>26 февраля 2017</b>«Оскар». Это первый «Оскар» Pixar за короткий метр после мультика «Птички» (2000). На сцене режиссёр поблагодарил своих детей — «трёх маленьких птичек».</li>
+</ul>
+</div>
+<div class="card">
+<h3>Кто его сделал</h3>
+<dl>
+<dt>Режиссёр и сценарист</dt><dd>Алан Барильяро</dd>
+<dt>Продюсер</dt><dd>Марк Сондхаймер</dd>
+<dt>Музыка</dt><dd>Эдриан Белью</dd>
+<dt>Монтаж</dt><dd>Сара К. Реймерс</dd>
+<dt>Студия</dt><dd>Pixar Animation Studios</dd>
+</dl>
+<p style="margin:16px 0 0;color:var(--soft)">До «Пайпер» Барильяро был аниматором на «ВАЛЛ-И», «Храброй сердцем» и «Университете монстров». Это его первый фильм как режиссёра.</p>
+</div>
+</div>
+</section>
+
+<!-- ГЕРОИ -->
+<section class="tab" id="t-heroes">
+<div class="kick">Герои</div>
+<h2>Кто живёт на этом берегу</h2>
+<p>У каждого героя есть переключатель: каким он показан в мультике и какой он в жизни.</p>
+<div class="heroes" id="heroCards"></div>
+</section>
+
+<!-- ОТЗЫВЫ -->
+<section class="tab" id="t-reviews">
+<div class="kick">Отзывы и оценки</div>
+<h2>Что говорят о мультике</h2>
+<div class="scores">
+<div class="sc"><b>100%</b>свежих отзывов критиков на Rotten Tomatoes</div>
+<div class="sc"><b>8,3</b>из 10 у зрителей IMDb</div>
+<div class="sc"><b>«Оскар»</b>лучший анимационный короткий метр</div>
+<div class="sc"><b>«Энни»</b>лучший короткий мультфильм</div>
+</div>
+<p>Волны принесли на берег бутылки с записками. Нажми на бутылку, чтобы прочитать.</p>
+<div class="shore" id="shore"></div>
+<div id="note"></div>
+</section>
+
+<!-- МОЁ МНЕНИЕ -->
+<section class="tab" id="t-opinion">
+<div class="op">
+<div class="card paper">
+<div class="kick" style="background:var(--coral);color:#fff">Моё мнение</div>
+<h2>Шесть минут чистой радости</h2>
+<p>«Пайпер» — очень милый и красивый мультик. В нём нет ни одного слова, но всё понятно без них.</p>
+<p>Птенец впервые идёт к морю за едой, и его с головой накрывает волна. После этого Пайпер боится воды и прячется в гнезде. Мне это очень понятно: если что-то один раз напугало, второй раз ещё страшнее.</p>
+<p>Самое классное — как Пайпер побеждает страх. Ей помогает не мама, а крошечный рак-отшельник. Он показывает, как зарыться в песок. И под водой вдруг оказывается целый красивый мир. <mark>Этот момент — мой любимый.</mark></p>
+<p>Картинка такая живая, будто это снято на камеру: мокрый песок, пена, каждое пёрышко. Трудно поверить, что всё нарисовано на компьютере.</p>
+<p>Конец очень тёплый. Пайпер больше не боится и даже находит еду для всей стаи. Мультик учит простой вещи: <mark>страх проходит, если посмотреть на него с открытыми глазами.</mark></p>
+<p style="margin:0">Это один из лучших коротких мультиков Pixar. Советую всем.</p>
+</div>
+<div class="card">
+<div class="big" id="total">0</div><p>из 10 — моя оценка</p>
+<div id="rates"></div>
+<img class="vivid" src="gif/pop.gif" alt="Пайпер выныривает из песка пушистым шариком" style="border-radius:22px;margin-top:18px" loading="lazy">
+</div>
+</div>
+</section>
+
+
+</main>
+
+<div class="surf" aria-hidden="true">
+<svg viewBox="0 0 1200 70" preserveAspectRatio="none"><path fill="rgba(31,181,193,.75)" d="M0 30 Q75 10 150 30 T300 30 T450 30 T600 30 T750 30 T900 30 T1050 30 T1200 30 V70 H0Z"/></svg>
+<svg viewBox="0 0 1200 70" preserveAspectRatio="none"><path fill="rgba(239,252,255,.9)" d="M0 44 Q50 30 100 44 T200 44 T300 44 T400 44 T500 44 T600 44 T700 44 T800 44 T900 44 T1000 44 T1100 44 T1200 44 V70 H0Z"/></svg>
+</div>
+<div class="wipe" id="wipe"><svg viewBox="0 0 1200 60" preserveAspectRatio="none"><path fill="#1fb5c1" d="M0 60 Q100 0 200 30 T400 30 T600 30 T800 30 T1000 30 T1200 30 V60Z"/></svg><div></div></div>
+
+<script>
+{
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+
+/* живой фон */
+let bdCur='',bdF=$('#bdA'),bdBk=$('#bdB');
+function setBd(n){if(n===bdCur)return;bdCur=n;const im=new Image();im.onload=()=>{bdBk.style.backgroundImage=`url(f/${n}.jpg)`;bdBk.classList.add('on');bdF.classList.remove('on');[bdF,bdBk]=[bdBk,bdF]};im.src='f/'+n+'.jpg'}
+const tabBd={home:'238',story:null,making:'260',heroes:'205',reviews:'295',opinion:'272'};
+const bub=$('#bubbles');
+if(!reduce)for(let i=0;i<22;i++){const b=document.createElement('i');const s=8+Math.random()*30;b.style.width=b.style.height=s+'px';b.style.left=Math.random()*100+'%';b.style.animationDuration=(12+Math.random()*16)+'s';b.style.animationDelay=(-Math.random()*25)+'s';bub.append(b)}
+
+/* вкладки + волна */
+const tabs=['home','story','making','heroes','reviews','opinion'];let first=true;
+function render(id){$$('.tab').forEach(t=>t.classList.toggle('on',t.id==='t-'+id));$$('.menu a').forEach(a=>{const on=a.getAttribute('href')==='#'+id;a.classList.toggle('on',on);if(on)a.scrollIntoView({block:'nearest',inline:'center'})});scrollTo(0,0);if(tabBd[id])setBd(tabBd[id]);else if(id==='story')setBd(ch[ci][0]);if(id==='opinion')fillRates()}
+function show(){const id=tabs.includes(location.hash.slice(1))?location.hash.slice(1):'home';
+  if(first||reduce){first=false;render(id);return}
+  const w=$('#wipe');w.classList.remove('go');void w.offsetWidth;w.classList.add('go');setTimeout(()=>render(id),420)}
+addEventListener('hashchange',show);
+
+/* следы на песке */
+const foot='<svg viewBox="0 0 24 24"><path d="M12 22V10M12 10L5 3M12 10l7-7M12 10V2" stroke="#fff" stroke-width="2.2" stroke-linecap="round" fill="none"/></svg>';
+let last=0,side=1;
+$('#beach').addEventListener('pointermove',e=>{const r=e.currentTarget.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;if(Math.hypot(x-(last.x||0),y-(last.y||0))<26)return;
+  const ang=last?Math.atan2(y-last.y,x-last.x)*180/Math.PI+90:0;last={x,y};side*=-1;
+  const d=document.createElement('div');d.className='track';d.innerHTML=foot;d.style.left=(x-11+side*6)+'px';d.style.top=(y-11)+'px';d.style.transform=`rotate(${ang}deg)`;$('#tracks').append(d);setTimeout(()=>d.remove(),3000);$('#bhint').style.opacity=0});
+
+/* сюжет */
+const ch=[['40','flock','Рассвет на берегу','Стая песочников бегает за волнами. Как только вода отходит, птицы быстро клюют еду в мокром песке.'],
+['56',null,'Гнездо в траве','Мама зовёт Пайпер к морю. Но птенцу уютно в гнезде, и выходить совсем не хочется.'],
+['105','waddle','Первый выход','Пайпер всё-таки идёт к воде. Она смотрит, как ищет еду мама, и пробует так же.'],
+['125','wave','Волна!','Все птицы убегают от волны, а Пайпер не успевает. Её накрывает с головой.'],
+['132','hide','Страх','Мокрая и напуганная, Пайпер прячется в траве. Теперь море кажется ей очень страшным. Но голод сильнее.'],
+['205','crab','Новый друг','У воды Пайпер встречает малыша рака-отшельника. Он совсем не боится волн.'],
+['240','dig','Зарыться в песок','Волна приближается, и раки быстро зарываются в песок. Пайпер делает так же.'],
+['260','under','Открыть глаза','Рак показывает: открой глаза! Под водой целый сияющий мир, а вокруг много еды.'],
+['272','run','Смелая','Пайпер выныривает пушистым шариком. Теперь она бегает к воде без страха.'],
+['295','feast','Еда для всех','Пайпер находит столько ракушек, что кормит всю стаю. На закате она гордо идёт домой.']];
+let ci=0;
+$('#marks').innerHTML=ch.map((c,i)=>`<button data-i="${i}" aria-label="Глава ${i+1}: ${c[2]}">${i+1}</button>`).join('');
+function chapter(i){ci=Math.max(0,Math.min(ch.length-1,i));const c=ch[ci];
+  $('#water').style.height=((ci+.5)/ch.length*100)+'%';
+  $$('.marks button').forEach((b,k)=>b.classList.toggle('on',k===ci));
+  if(location.hash==='#story')setBd(c[0]);const im=$('#scImg');im.style.opacity=0;setTimeout(()=>{im.src='f/'+c[0]+'.jpg';im.alt=c[2];im.style.opacity=1},200);
+  $('#gifBtn').style.display=c[1]?'':'none';$('#gifBtn').textContent='▶ Оживить';
+  $('#scText').innerHTML=`<div class="ch-num">${String(ci+1).padStart(2,"0")}</div><h2 style="font-size:clamp(24px,2.6vw,32px)">${c[2]}</h2><p style="margin:0">${c[3]}</p>`;
+  $('#gauge').setAttribute('aria-valuenow',ci+1)}
+$('#gifBtn').onclick=()=>{const c=ch[ci],im=$('#scImg'),on=im.src.includes('.gif');im.src=on?'f/'+c[0]+'.jpg':'gif/'+c[1]+'.gif';$('#gifBtn').textContent=on?'▶ Оживить':'❚❚ Стоп'};
+$('#marks').addEventListener('click',e=>{const b=e.target.closest('button');if(b)chapter(+b.dataset.i)});
+let gd=false;const g=$('#gauge');
+const fromY=e=>{const r=g.getBoundingClientRect();return Math.floor((1-(e.clientY-r.top)/r.height)*ch.length)};
+g.addEventListener('pointerdown',e=>{if(e.target.closest('button'))return;gd=true;g.setPointerCapture(e.pointerId);chapter(fromY(e))});
+g.addEventListener('pointermove',e=>{if(gd){const n=fromY(e);if(n!==ci)chapter(n)}});
+g.addEventListener('pointerup',()=>gd=false);
+g.addEventListener('keydown',e=>{if(e.key==='ArrowUp'||e.key==='ArrowRight'){e.preventDefault();chapter(ci+1)}if(e.key==='ArrowDown'||e.key==='ArrowLeft'){e.preventDefault();chapter(ci-1)}});
+chapter(0);
+
+/* ракушки */
+const facts=[['6','минут','Весь мультик идёт всего шесть минут — а делали его три года.'],
+['3','года','Столько команда работала над мультиком. Они ездили на пляжи и снимали настоящих птиц, чтобы повторить их движения.'],
+['1-й','«Оскар» за 15 лет','До «Пайпер» Pixar последний раз получала «Оскар» за короткий мультик в 2002 году — за «Птичек».'],
+['0','слов','В мультике никто не говорит. Всё рассказано движениями, звуками моря и музыкой.'],
+['Рок','музыка','Музыку написал Эдриан Белью — гитарист знаменитой рок-группы King Crimson.'],
+['A−','от IndieWire','Критик назвал мультик захватывающей историей выживания, одетой во что-то очень милое.']];
+$('#shells').innerHTML=facts.map((f,i)=>`<button class="shell" data-i="${i}" aria-label="Открыть факт: ${f[1]}"><div class="top"><b>${f[0]}</b><span>${f[1]}</span></div><div class="in"><div class="pearl"></div>${f[2]}</div></button>`).join('');
+$$('.shell').forEach(s=>s.addEventListener('click',()=>s.classList.toggle('open')));
+
+/* герои */
+const hs=[['Пайпер','236','Маленький пушистый птенец песочника. Очень любопытная, но после встречи с волной начинает бояться моря. В конце становится самой смелой в стае.','Пайпер — это песочник, маленькая береговая птица. Песочники правда бегают туда-сюда за волнами и быстро клюют мелких животных в мокром песке. Само слово «piper» — это часть английского «sandpiper», то есть «песочник».'],
+['Мама','140','Заботливая мама Пайпер. Не кормит малышку с клюва, а терпеливо учит её искать еду самой.','Птенцы песочников рано начинают ходить и сами ищут себе еду. Родители больше охраняют и показывают, чем кормят.'],
+['Рак-отшельник','205','Крошечный рак с оранжевой ракушкой. Не боится волн, потому что знает секрет: надо зарыться в песок.','Раки-отшельники живут в пустых ракушках. Когда рак вырастает, он ищет себе ракушку побольше и переезжает.'],
+['Стая','285','Взрослые песочники. Они всё время убегают от волн. В конце Пайпер кормит их всех.','Песочники часто держатся стаями и вместе кормятся на берегу. Многие из них совершают очень далёкие перелёты.'],
+['Волна','175','Главная «злодейка» мультика. Сначала она пугает Пайпер, а в конце помогает ей найти еду.','Волна вымывает песок и открывает ракушки. Поэтому птицы и ищут еду сразу после того, как вода отступит.']];
+$('#heroCards').innerHTML=hs.map((h,i)=>`<article class="hc" data-i="${i}"><img src="t/${h[1]}.jpg" alt="${h[0]}" loading="lazy"><div class="b"><div class="sw"><button class="on" data-m="0">В мультике</button><button data-m="1">В жизни</button></div><h3>${h[0]}</h3><p class="tx" style="margin:0">${h[2]}</p></div></article>`).join('');
+$('#heroCards').addEventListener('click',e=>{const b=e.target.closest('.sw button');if(!b)return;const c=b.closest('.hc'),m=+b.dataset.m;c.querySelectorAll('.sw button').forEach(x=>x.classList.toggle('on',x===b));c.classList.toggle('real',m===1);c.querySelector('.tx').textContent=hs[+c.dataset.i][2+m]});
+
+/* бутылки с отзывами */
+const revs=[['Захватывающая история выживания, только одетая во что-то очень милое.','IndieWire, Эрик Кон · A−'],
+['С «Птичек» у Pixar не было такого обаятельного маленького мультика.','Antagony & Ecstasy, Тим Брэйтон · 9/10'],
+['Самая реалистичная анимация Pixar на тот момент — но красота не заслоняет историю.','The Reel Bits'],
+['Техника и фирменная душевность Pixar сошлись идеально.','Every Movie Has a Lesson · 4/5'],
+['Очаровательная и весёлая морская сценка.','Chicago Reader'],
+['Милый мультик про то, как побеждать страхи. Но лучшим у Pixar я бы его не назвал.','The Film Guy Stash'],
+['Каждый раз плачу от того, как мама смотрит на малышку, когда та побеждает страх.','Зритель Rotten Tomatoes']];
+const bottle=c=>`<svg viewBox="0 0 64 120"><rect x="24" y="4" width="16" height="12" rx="3" fill="#a0784f"/><path d="M26 16h12v18c10 6 16 14 16 26v48a8 8 0 0 1-8 8H18a8 8 0 0 1-8-8V60c0-12 6-20 16-26z" fill="${c}" opacity=".75"/><rect x="20" y="58" width="24" height="38" rx="4" fill="#fffaf0" transform="rotate(-6 32 77)"/><path d="M16 64v36" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".6"/></svg>`;
+const cols=['#3fd3dc','#7be0a5','#ff8f6e','#a9b8ff','#ff6b4a','#52c6ff','#c7e86b'];
+$('#shore').innerHTML=revs.map((r,i)=>`<button class="bottle" data-i="${i}" aria-label="Записка ${i+1}">${bottle(cols[i])}<span>№${i+1}</span></button>`).join('');
+$('#shore').addEventListener('click',e=>{const b=e.target.closest('.bottle');if(!b)return;b.classList.add('read');const r=revs[+b.dataset.i];
+  $('#note').innerHTML=`<div class="note"><q>${r[0]}</q><div class="by">— ${r[1]}</div></div>`;$('#note').scrollIntoView({block:'nearest',behavior:reduce?'auto':'smooth'})});
+
+/* мнение */
+const rt=[['Картинка',10],['История',9],['Милота',10],['Музыка',9],['Эмоции',10]];
+$('#rates').innerHTML=rt.map(r=>`<div class="rate"><span>${r[0]}</span><span class="sh">${'<i></i>'.repeat(10)}</span><b>${r[1]}</b></div>`).join('');
+function fillRates(){$$('.rate').forEach((row,k)=>row.querySelectorAll('i').forEach((x,j)=>{x.classList.remove('f');if(j<rt[k][1])setTimeout(()=>x.classList.add('f'),reduce?0:k*120+j*60)}));
+  let t=0;const st=setInterval(()=>{t=Math.min(9.6,+(t+.4).toFixed(1));$('#total').textContent=String(t).replace('.',',');if(t>=9.6)clearInterval(st)},50)}
+
+
+show();
+}
+</script>
+</body>
+</html>
